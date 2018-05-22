@@ -6,6 +6,13 @@ pkg_license=("Apache-2.0")
 pkg_deps=(core/tomcat8 core/jre8 core/mongo-tools)
 pkg_build_deps=(core/jdk8/8u131 core/maven)
 pkg_svc_user="root"
+pkg_binds=(
+    [database]="port"
+)
+pkg_exports=(
+    [port]=server.port
+)
+pkg_exposes=port
 
 do_prepare(){ export JAVA_HOME=$(hab pkg path core/jdk8) ; }
 
@@ -23,7 +30,3 @@ do_install()
     cp -v $(hab pkg path core/tomcat8)/config/conf_server.xml ${PREFIX}/config/
     cp -v ${HAB_CACHE_SRC_PATH}/${pkg_dirname}/data/national-parks.json ${PREFIX}/
 }
-
-pkg_binds=(
-    [database]="port"
-)
